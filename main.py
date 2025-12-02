@@ -1,39 +1,35 @@
-import random 
-from colour import RED,GREEN,BLUE,YELLOW,RESET
+from batsman import Batsman
+from bowler import Bowler
+from score_tracker import ScoreTracker
+from over_manager import OverManager
+from colour import RED,GREEN,BLUE,YELLOW,WHITE
 
-class CricketGame:
-    def __init__(self):
-        self.score=0
-        self.out=False
+def main():
+    print("---CRICKET PRIMER LEAGUE---")
 
-    def play_ball(self):
-        user_run = int(input("Enter your shot (1-6) : "))
-        bowled_ball = random.randint(1, 6)
+    batsman = Batsman()
+    bowler = Bowler()
+    tracker = ScoreTracker()
+    over = OverManager()
 
-        print(f"bowler delivered : {bowled_ball}\n")
+    while True :
+        print(f"\n Ball {over.current_ball} of {over.max_balls}")
 
-        if user_run == bowled_ball :
-            print(f"{RED} OUT! bowled.....{RESET}")
-            self.out=True
-
-        else:
-            self.score += user_run
-            print(f"{GREEN}Nice shot! Total score : {self.score}\n{RESET}")
-
-    def start(self):
-        print("Are you ready batsman \n"
-              "Hit between (1-6).\n"
-              "if bowler matches the shot >> you are out!\n")
         
-        while not self.out:
-            try:
-                self.play_ball()
+        user_run=batsman.play_shot()
+        ball = bowler.Bowl_ball()
+       
 
-            except:
-                print("Bro enter a valid number")
+        out = tracker.update_score(user_run,ball)
 
-        print(f"Your final score : {self.score}\n"
-              "Thanks for playing")
-        
-game = CricketGame()
-game.start()
+        if out:
+            print(f"{RED} you are out {WHITE}")
+            break
+
+        over.ball_bowled()
+
+        if over.over_completed:
+            print("\nover completed!")
+
+if __name__=="__main__":
+    main()
